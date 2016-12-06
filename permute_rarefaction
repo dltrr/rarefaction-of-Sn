@@ -1,3 +1,7 @@
+#Este é um código para realizar permutacao da funcao de rarefacao do pacote VEGAN
+#Somente para testes
+#Criado por Edson Delatorre
+
 library("vegan")
 SH_db <- read.csv("~/Path/to/file.csv", header = TRUE, sep = ",", dec = ",", fill = TRUE)
 
