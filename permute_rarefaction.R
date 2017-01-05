@@ -3,24 +3,35 @@
 
 library("vegan")
 
-SH_db <- as.data.frame(read.csv("~/Path/to/file.csv", header = TRUE, sep = ",", dec = ",", fill = TRUE))	#Data frame com os dados das especies da comunidade
+#Importa data frame com os dados das especies da comunidade
+SH_db <- as.data.frame(read.csv("~/Path/to/file.csv", header = TRUE, sep = ",", dec = ",", fill = TRUE))	
 
-sample = 10           #Tamanho da amostra
-prefix = "SH_db_r"    #Prefixo dos arquivos de output da sub-amostragem
-rep = 10              #Número de replicatas
+#Tamanho da amostra
+sample = 10           
+#Prefixo dos arquivos de output da sub-amostragem
+prefix = "Comun1_db_r"    
+#Número de replicatas
+rep = 100              
 
-for(i in 1:rep)       #Replicatas
+#Replicatas
+for(i in 1:rep)       
 {
-name <- paste(prefix, i, sep = "")					 	
-assign(name, rrarefy(SH_db, sample))																		                #Gera n = "rep" tabelas rarefeitas randomicas de tamanho = "sample" (função rrarefy() Vegan) 
+name <- paste(prefix, i, sep = "")
+#Gera n = "rep" tabelas rarefeitas randomicas de tamanho = "sample" (função rrarefy() Vegan) 
+assign(name, rrarefy(SH_db, sample))																		                
 name2 <- paste(prefix, "_SH", i, sep = "")
-assign(name2, diversity(get(name), index = "shannon", MARGIN = 1, base = exp (1)))			#Cálculo do índice de Shannon para tabela rarefeita
+#Cálculo do índice de Shannon para tabela rarefeita
+assign(name2, diversity(get(name), index = "shannon", MARGIN = 1, base = exp (1)))			
 }
 
-SH_list = lapply(ls(pattern = "SH_db_r_SH[0-9]"), get)														      #Gera a lista com todas as tabelas de índices de Shannon
+#Gera a lista com todas as tabelas de índices de Shannon
+SH_list = lapply(ls(pattern = "SH_db_r_SH[0-9]"), get)														      
 
-Reduce(`+`, SH_list) / length(SH_list) -> SH_db_r_SH_mean													      #Cálculo da média dos índices de Shannon
+#Cálculo da média dos índices de Shannon
+Reduce(`+`, SH_list) / length(SH_list) -> Comun1_db_r_SH_mean													      
 
-SH_db_r_SH_mean / log(sample, base = exp(1)) -> SH_db_r_SH_mean_norm
+#Cálculo dos índices de Shannon normalizados (SHn)
+Comun1_db_r_SH_mean / log(sample, base = exp(1)) -> Comun1_db_r_SH_mean_norm
 
-write.csv(cbind(SH_db_r_SH_mean, SH_db_r_SH_mean_norm), file = "~\\Path\\to\\file.csv") #Salva o resultado em um arquivo CSV
+#Salva o resultado em um arquivo CSV
+write.csv(cbind(Comun1_db_r_SH_mean, Comun1_db_r_SH_mean_norm), file = "~\\Path\\to\\file.csv") 
