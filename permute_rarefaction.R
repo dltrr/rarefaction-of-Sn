@@ -15,14 +15,14 @@ rep = 100
 
 #Replicatas
 for(i in 1:rep)       
-{
-name <- paste(prefix, "_", i, "_r", sep = "")
-#Gera n = "rep" tabelas rarefeitas randomicas de tamanho = "sample" (função rrarefy() Vegan) 
-assign(name, rrarefy(get(prefix), sample))																		                
-name2 <- paste(name, "_SH", sep = "")
-#Cálculo do índice de Shannon para tabela rarefeita (função diversity() Vegan)
-assign(name2, diversity(get(name), index = "shannon", MARGIN = 1, base = exp (1)))			
-}
+ {
+   name <- paste(prefix, "_", i, "_r", sep = "")
+   #Gera n = "rep" tabelas rarefeitas randomicas de tamanho = "sample" (função rrarefy() Vegan) 
+   assign(name, rrarefy(get(prefix), sample))																		                
+   name2 <- paste(name, "_SH", sep = "")
+   #Cálculo do índice de Shannon para tabela rarefeita (função diversity() Vegan)
+   assign(name2, diversity(get(name), index = "shannon", MARGIN = 1, base = exp (1)))			
+ }
 
 #Gera a lista com todas as tabelas de índices de Shannon (mudar de acordo com o prefixo estipulado)
 SH_list = lapply(ls(pattern = "Comun1_db_[0-9]_r_SH"), get)														      
