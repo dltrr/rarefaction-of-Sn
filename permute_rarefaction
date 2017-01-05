@@ -1,24 +1,27 @@
-#Este é um código para realizar permutacao da funcao de rarefacao do pacote VEGAN
-#Somente para testes
+#Este é um código para realizar permutação da função de rarefação (rrarefy) do pacote VEGAN
 #Criado por Edson Delatorre
 
 library("vegan")
-SH_db <- read.csv("~/Path/to/file.csv", header = TRUE, sep = ",", dec = ",", fill = TRUE)
 
+SH_db <- as.data.frame(read.csv("~/Path/to/file.csv", header = TRUE, sep = ",", dec = ",", fill = TRUE))	#Data frame com os dados das especies da comunidade
 
-sample = 10				    #Tamanho da amostra
-prefix = "SH_db_r"		#Prefixo do arquivo sub-amostrado
-rep = 10			      	#Número de replicatas
+sample = 10				   																					#Tamanho da amostra
+prefix = "SH_db_r"																							#Prefixo dos arquivos de output da sub-amostragem
+rep = 10			      																					#Número de replicatas
 
-for(i in 1:rep) 
+for(i in 1:rep) 																							#Replicatas
 {
-name <- paste(prefix, i, sep = "")
-assign(name, rrarefy(SH_db, sample))
-
-#As replicatas estao prontas, agora falta somar todas os dataframes e fazer uma média de alguma forma
-
-#reduce()?
-#
-
-
+name <- paste(prefix, i, sep = "")					 	
+assign(name, rrarefy(SH_db, sample))																		#Gera n = "rep" tabelas rarefeitas randomicas de tamanho = "sample" (função rrarefy() Vegan) 
+etapa <- "SH_db_r[i]"
+name2 <- paste(prefix, "_SH", i, sep = "")
+assign(name2, diversity(get(name), index = "shannon", MARGIN = 1, base = exp (1)))							#Cálculo do índice de Shannon para tabela rarefeita
 }
+
+SH_list = lapply(ls(pattern = "SH_db_r_SH[0-9]"), get)														#Gera a lista com todas as tabelas de índices de Shannon
+
+Reduce(`+`, SH_list) / length(SH_list) -> SH_db_r_SH_mean													#Cálculo da média dos índices de Shannon
+
+SH_db_r_SH_mean / log(sample, base = exp(1)) -> SH_db_r_SH_mean_norm
+
+write.csv(cbind(SH_db_r_SH_mean, SH_db_r_SH_mean_norm), file = "~\\Path\\to\\file.csv")						#Salva o resultado em um arquivo CSV
