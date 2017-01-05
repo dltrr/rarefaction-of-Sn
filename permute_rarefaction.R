@@ -20,7 +20,7 @@ name <- paste(prefix, i, sep = "")
 #Gera n = "rep" tabelas rarefeitas randomicas de tamanho = "sample" (função rrarefy() Vegan) 
 assign(name, rrarefy(SH_db, sample))																		                
 name2 <- paste(prefix, "_SH", i, sep = "")
-#Cálculo do índice de Shannon para tabela rarefeita
+#Cálculo do índice de Shannon para tabela rarefeita (função diversity() Vegan)
 assign(name2, diversity(get(name), index = "shannon", MARGIN = 1, base = exp (1)))			
 }
 
