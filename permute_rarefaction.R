@@ -3,29 +3,29 @@
 
 library("vegan")
 
-#Importa data frame com os dados das especies da comunidade
-SH_db <- as.data.frame(read.csv("~/Path/to/file.csv", header = TRUE, sep = ",", dec = ",", fill = TRUE))	
+#Importa data frame com os dados da diversidade da comunidade
+Comun1_db <- as.data.frame(read.csv("~/Path/to/file.csv", header = TRUE, sep = ",", dec = ",", fill = TRUE))	
 
 #Tamanho da amostra
 sample = 10           
-#Prefixo dos arquivos de output da sub-amostragem
-prefix = "Comun1_db_r"    
+#Prefixo dos arquivos de output da sub-amostragem = data.frame
+prefix = "Comun1_db"    
 #Número de replicatas
 rep = 100              
 
 #Replicatas
 for(i in 1:rep)       
 {
-name <- paste(prefix, i, sep = "")
+name <- paste(prefix, "_", i, "_r", sep = "")
 #Gera n = "rep" tabelas rarefeitas randomicas de tamanho = "sample" (função rrarefy() Vegan) 
-assign(name, rrarefy(SH_db, sample))																		                
-name2 <- paste(prefix, "_SH", i, sep = "")
+assign(name, rrarefy(get(prefix), sample))																		                
+name2 <- paste(name, "_SH", sep = "")
 #Cálculo do índice de Shannon para tabela rarefeita (função diversity() Vegan)
 assign(name2, diversity(get(name), index = "shannon", MARGIN = 1, base = exp (1)))			
 }
 
-#Gera a lista com todas as tabelas de índices de Shannon
-SH_list = lapply(ls(pattern = "SH_db_r_SH[0-9]"), get)														      
+#Gera a lista com todas as tabelas de índices de Shannon (mudar de acordo com o prefixo estipulado)
+SH_list = lapply(ls(pattern = "Comun1_db_[0-9]_r_SH"), get)														      
 
 #Cálculo da média dos índices de Shannon
 Reduce(`+`, SH_list) / length(SH_list) -> Comun1_db_r_SH_mean													      
