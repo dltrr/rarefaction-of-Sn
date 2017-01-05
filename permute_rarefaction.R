@@ -1,10 +1,10 @@
-#Este é um código para realizar permutação da função de rarefação (rrarefy) do pacote VEGAN
+#Este é um código para realizar permutação da função de rarefação (rrarefy) do pacote VEGAN (https://cran.r-project.org/web/packages/vegan/index.html)
 #Criado por Edson Delatorre
 
 library("vegan")
 
-#Importa data frame com os dados da diversidade da comunidade
-Comun1_db <- as.data.frame(read.csv("~/Path/to/file.csv", header = TRUE, sep = ",", dec = ",", fill = TRUE))	
+#Importa data frame com os dados da diversidade da comunidade (arquivo tabular)
+Comun1_db <- read.delim2("~\\Path\\to\\file.txt", header = TRUE, sep = "\t", dec = ",", fill = TRUE)
 
 #Tamanho da amostra
 sample = 10           
@@ -30,8 +30,8 @@ SH_list = lapply(ls(pattern = "Comun1_db_[0-9]_r_SH"), get)
 #Cálculo da média dos índices de Shannon
 Reduce(`+`, SH_list) / length(SH_list) -> Comun1_db_r_SH_mean													      
 
-#Cálculo dos índices de Shannon normalizados (SHn)
+#Cálculo dos índices de Shannon normalizados (SHn) pelo tamanho amostral
 Comun1_db_r_SH_mean / log(sample, base = exp(1)) -> Comun1_db_r_SH_mean_norm
 
 #Salva o resultado em um arquivo CSV
-write.csv(cbind(Comun1_db_r_SH_mean, Comun1_db_r_SH_mean_norm), file = "~\\Path\\to\\file.csv") 
+write.table(cbind(Comun1_db_r_SH_mean, Comun1_db_r_SH_mean_norm), file = "~\\Path\\to\\file.txt") 
